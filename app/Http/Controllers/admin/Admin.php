@@ -19,9 +19,9 @@ class Admin extends Controller
     public function dashboard()
     {
         $data['function_key'] = __FUNCTION__;
-        $data['orderday'] = Orders::select(DB::raw("SUM(total)as total"))->whereDay('created_at', date('d'))->first();
-        $data['ordermouth'] = Orders::select(DB::raw("SUM(total)as total"))->whereMonth('created_at', date('m'))->first();
-        $data['orderyear'] = Orders::select(DB::raw("SUM(total)as total"))->whereYear('created_at', date('Y'))->first();
+        $data['orderday'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereDay('created_at', date('d'))->first();
+        $data['ordermouth'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereMonth('created_at', date('m'))->first();
+        $data['orderyear'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereYear('created_at', date('Y'))->first();
         $data['ordertotal'] = Orders::count();
 
         $menu = Menu::select('id', 'name')->get();
@@ -30,14 +30,14 @@ class Admin extends Controller
         if (count($menu) > 0) {
             foreach ($menu as $rs) {
                 $item_menu[] = $rs->name;
-                $menu_order = OrdersDetails::where('menu_id', $rs->id)->groupBy('menu_id')->count();
+                $menu_order = OrdersDetails::Join('orders', 'orders.id', '=', 'orders_details.order_id')->where('orders.status', 2)->where('menu_id', $rs->id)->groupBy('menu_id')->count();
                 $item_order[] = $menu_order;
             }
         }
 
         $item_mouth = array();
         for ($i = 1; $i < 13; $i++) {
-            $query = Orders::select(DB::raw("SUM(total)as total"))->whereMonth('created_at', date($i))->first();
+            $query = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereMonth('created_at', date($i))->first();
             $item_mouth[] = $query->total;
         }
         $data['item_menu'] = $item_menu;
