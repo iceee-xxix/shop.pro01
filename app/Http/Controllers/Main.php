@@ -21,7 +21,7 @@ class Main extends Controller
         if ($table_id) {
             session(['table_id' => $table_id]);
         }
-        $promotion = Promotion::where('is_status', 1)->whereDate('start_date', '<=', date('Y-m-d'))->whereDate('end_date', '>=', date('Y-m-d'))->get();
+        $promotion = Promotion::where('is_status', 1)->get();
         $category = Categories::has('menu')->with('files')->get();
         return view('users.main_page', compact('category', 'promotion'));
     }
