@@ -75,7 +75,7 @@ $config = Config::first();
     <div class="card-body">
         <div class="container">
             <div class="row">
-                @if(!empty($address))
+                @if(count($address) > 0)
                 @foreach($address as $rs)
                 <div class="col-md-6 mb-3 d-flex">
                     <label class="card p-3 position-relative w-100" style="cursor:pointer;">
