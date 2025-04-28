@@ -69,47 +69,47 @@ $config = Config::first();
         cursor: pointer;
     }
 </style>
-@if(Session::get('user'))
-<div class="card">
-    <div class="card-header">ข้อมูลที่อยู่</div>
-    <div class="card-body">
-        <div class="container">
-            <div class="row">
-                @if(count($address) > 0)
-                @foreach($address as $rs)
-                <div class="col-md-6 mb-3 d-flex">
-                    <label class="card p-3 position-relative w-100" style="cursor:pointer;">
-                        <div class="d-flex align-items-center gap-3">
-                            <input type="radio" class="form-check-input mt-0" name="address" onclick="change_is_use(this)" value="{{$rs->id}}" {{ ($rs->is_use == 1) ? 'checked' : ''}}>
-                            <div class="flex-grow-1 d-flex flex-column justify-content-center">
-                                <span class="fw-bold">{{$rs->name}}</span>
-                                <small class="text-muted">{{$rs->detail}}</small>
-                            </div>
-                        </div>
-                    </label>
-                </div>
-                @endforeach
-                @else
-                <div class="col-md-6 mb-3 d-flex">
-                    <label class="card border-success p-3 position-relative w-100">
-                        <div class="flex-grow-1 d-flex flex-column justify-content-center">
-                            <a href="{{route('delivery.createaddress')}}" style="text-decoration: none;">
-                                <span class="fw-bold text-success"><i class="fa fa-plus"></i> เพิ่มที่อยู่ใหม่</span>
-                            </a>
-                        </div>
-                    </label>
-                </div>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 <div class="container">
     <div class="d-flex flex-column justify-content-center gap-2">
         <div class="title-buy">
             คำสั่งซื้อ
         </div>
+        @if(Session::get('user'))
+        <div class="card">
+            <div class="card-header">ข้อมูลที่อยู่</div>
+            <div class="card-body">
+                <div class="container">
+                    <div class="row">
+                        @if(count($address) > 0)
+                        @foreach($address as $rs)
+                        <div class="col-md-6 mb-3 d-flex">
+                            <label class="card p-3 position-relative w-100" style="cursor:pointer;">
+                                <div class="d-flex align-items-center gap-3">
+                                    <input type="radio" class="form-check-input mt-0" name="address" onclick="change_is_use(this)" value="{{$rs->id}}" {{ ($rs->is_use == 1) ? 'checked' : ''}}>
+                                    <div class="flex-grow-1 d-flex flex-column justify-content-center">
+                                        <span class="fw-bold">{{$rs->name}}</span>
+                                        <small class="text-muted">{{$rs->detail}}</small>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        @endforeach
+                        @else
+                        <div class="col-md-6 mb-3 d-flex">
+                            <label class="card border-success p-3 position-relative w-100">
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center">
+                                    <a href="{{route('delivery.createaddress')}}" style="text-decoration: none;">
+                                        <span class="fw-bold text-success"><i class="fa fa-plus"></i> เพิ่มที่อยู่ใหม่</span>
+                                    </a>
+                                </div>
+                            </label>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="bg-white px-2 pt-3 shadow-lg d-flex flex-column aling-items-center justify-content-center"
             style="border-radius: 10px;">
             <div class="title-list-buy">
