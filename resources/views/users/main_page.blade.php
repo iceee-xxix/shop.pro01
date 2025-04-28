@@ -71,7 +71,7 @@ $config = Config::first();
 @endif
 <div class="container mt-1">
     <div class="d-flex flex-column justify-content-center">
-        <div class=" text-start fw-bold fs-5" style="color:<?= ($config->color_font != '')  ? $config->color_font :  '#ffffff' ?>">
+        <!-- <div class=" text-start fw-bold fs-5" style="color:<?= ($config->color_font != '')  ? $config->color_font :  '#ffffff' ?>">
             ที่นี่เรามี...
         </div>
         <div class="overflow-x-auto d-flex justify-content-between gap-2 py-2"
@@ -103,7 +103,7 @@ $config = Config::first();
                 </div>
                 <div class="mt-1 fw-bold" style="font-size: 13px;color:<?= ($config->color_font != '')  ? $config->color_font :  '#ffffff' ?>;">ห้องน้ำสะอาด</div>
             </div>
-        </div>
+        </div> -->
         <div class="title-food">
             หมวดอาหาร
         </div>
