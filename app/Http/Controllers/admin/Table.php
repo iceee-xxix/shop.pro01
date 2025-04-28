@@ -53,7 +53,7 @@ class Table extends Controller
 
     public function tableEdit($id)
     {
-        $function_key = 'category';
+        $function_key = 'table';
         $info = ModelsTable::find($id);
 
         return view('table.edit', compact('info', 'function_key'));

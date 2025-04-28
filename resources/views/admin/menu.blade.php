@@ -26,6 +26,7 @@ $config = Config::first();
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
+        @if(Session::get('user')->is_rider == 0)
         <li class="menu-header small text-uppercase"><span class="menu-header-text">ตั้งค่า</span></li>
         <li class="menu-item {{ ($function_key == 'config') ? 'active' : '' }}">
             <a href="{{route('config')}}" class="menu-link">
@@ -45,6 +46,12 @@ $config = Config::first();
                 <div data-i18n="Analytics">จัดการโต้ะ</div>
             </a>
         </li>
+        <li class="menu-item {{ ($function_key == 'rider') ? 'active' : '' }}">
+            <a href="{{route('rider')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cycling"></i>
+                <div data-i18n="Analytics">ไรเดอร์</div>
+            </a>
+        </li>
         <li class="menu-header small text-uppercase"><span class="menu-header-text">อาหาร</span></li>
         <li class="menu-item {{ ($function_key == 'category') ? 'active' : '' }}">
             <a href="{{route('category')}}" class="menu-link">
@@ -58,5 +65,13 @@ $config = Config::first();
                 <div data-i18n="Basic">เมนูอาหาร</div>
             </a>
         </li>
+        @elseif(Session::get('user')->is_rider == 1)
+        <li class="menu-item {{ ($function_key == 'OrderRider') ? 'active' : '' }}">
+            <a href="{{route('OrderRider')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cycling"></i>
+                <div data-i18n="Analytics">ไรเดอร์</div>
+            </a>
+        </li>
+        @endif
     </ul>
 </aside>

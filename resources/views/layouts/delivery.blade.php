@@ -125,6 +125,10 @@ $config = Config::first();
                 <div class="icon"><i class="fas fa-receipt"></i></div> <!-- ✅ ใช้ icon แสดงคำสั่งซื้อ -->
                 <div>คำสั่งซื้อ</div>
             </a>
+            <a href="{{route('delivery.listorder')}}">
+                <div class="icon"><i class="fas fa-clipboard-list"></i></div> <!-- ✅ ใช้ icon แสดงคำสั่งซื้อ -->
+                <div>รายการ</div>
+            </a>
             <a href="{{route('delivery.users')}}">
                 <div class="icon"><i class="fas fa-user"></i></div> <!-- ✅ ใช้ icon แสดงคำสั่งซื้อ -->
                 <div>โปรไฟล์</div>

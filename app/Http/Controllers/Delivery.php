@@ -75,7 +75,7 @@ class Delivery extends Controller
                 if ($info != null) {
                     $order = new Orders();
                     $order->users_id = Session::get('user')->id;
-                    $order->address_id = Session::get('user')->id;
+                    $order->address_id = $info->id;
                     $order->total = $total;
                     $order->remark = $remark;
                     $order->status = 1;
@@ -176,6 +176,7 @@ class Delivery extends Controller
         $info = UsersAddress::find($id);
         return view('delivery.editaddress', compact('info'));
     }
+
     public function usersSave(Request $request)
     {
         $input = $request->post();
@@ -187,5 +188,42 @@ class Delivery extends Controller
             return redirect()->route('delivery.users')->with('success', 'เพิ่มที่อยู่เรียบร้อยแล้ว');
         }
         return redirect()->route('delivery.users')->with('error', 'ไม่สามารถเพิ่มที่อยู่ได้');
+    }
+
+    public function listorder()
+    {
+        $orderlist = [];
+        if (Session::get('user')) {
+            $orderlist = Orders::select('orders.*', 'users.name', 'users.tel')
+                ->where('users_id', Session::get('user')->id)
+                ->leftJoin('rider_sends', 'orders.id', '=', 'rider_sends.order_id')
+                ->leftJoin('users', 'rider_sends.rider_id', '=', 'users.id')
+                ->get();
+        }
+        return view('delivery.order', compact('orderlist'));
+    }
+
+    public function listOrderDetail(Request $request)
+    {
+        $orders = OrdersDetails::select('menu_id')
+            ->where('order_id', $request->input('id'))
+            ->groupBy('menu_id')
+            ->get();
+
+        if (count($orders) > 0) {
+            $info = '';
+            foreach ($orders as $key => $value) {
+                $order = OrdersDetails::where('order_id', $request->input('id'))
+                    ->where('menu_id', $value->menu_id)
+                    ->with('menu', 'option')
+                    ->get();
+                $info .= '<div class="card text-white bg-primary mb-3"><div class="card-body"><h5 class="card-title text-white">' . $order[0]['menu']->name . '</h5><p class="card-text">';
+                foreach ($order as $rs) {
+                    $info .= '' . $rs['menu']->name . ' (' . $rs['option']->type . ') จำนวน ' . $rs->quantity . ' ราคา ' . ($rs->quantity * $rs->price) . ' บาท <br>';
+                }
+                $info .= '</p></div></div>';
+            }
+        }
+        echo $info;
     }
 }

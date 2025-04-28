@@ -9,14 +9,15 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-end">
-                        <a href="{{route('tableCreate')}}" class="btn btn-sm btn-outline-success d-flex align-items-center" style="font-size:14px">เพิ่มโต้ะ&nbsp;<i class="bx bxs-plus-circle"></i></a>
+                        <a href="{{route('riderCreate')}}" class="btn btn-sm btn-outline-success d-flex align-items-center" style="font-size:14px">เพิ่มไรเดอร์&nbsp;<i class="bx bxs-plus-circle"></i></a>
                     </div>
                     <div class="card-body">
                         <table id="myTable" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th class="text-center">เลขโต้ะ</th>
-                                    <th class="text-center">QR-Code</th>
+                                    <th class="text-center">ชื่อไรเดอร์</th>
+                                    <th class="text-center">อีเมล</th>
+                                    <th class="text-center">เบอร์ติดต่อ</th>
                                     <th class="text-center">จัดการ</th>
                                 </tr>
                             </thead>
@@ -25,30 +26,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-qr">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">QR-code</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="card">
-                    <div class="card-body d-flex justify-content-center">
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-center mb-3" id="body-html">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success">ดาวน์โหลด</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
             </div>
         </div>
     </div>
@@ -66,7 +43,7 @@
             },
             processing: true,
             ajax: {
-                url: "{{route('tablelistData')}}",
+                url: "{{route('riderlistData')}}",
                 type: "post",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -74,12 +51,18 @@
             },
 
             columns: [{
-                    data: 'number',
+                    data: 'name',
                     class: 'text-center',
-                    width: '60%'
+                    width: '40%'
                 },
                 {
-                    data: 'qr_code',
+                    data: 'email',
+                    class: 'text-center',
+                    width: '20%',
+                    orderable: false
+                },
+                {
+                    data: 'tel',
                     class: 'text-center',
                     width: '20%',
                     orderable: false
@@ -107,7 +90,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{route('tableDelete')}}",
+                    url: "{{route('riderDelete')}}",
                     type: "post",
                     data: {
                         id: id

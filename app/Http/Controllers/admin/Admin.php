@@ -9,6 +9,8 @@ use App\Models\Config;
 use App\Models\Menu;
 use App\Models\Orders;
 use App\Models\OrdersDetails;
+use App\Models\RiderSend;
+use App\Models\User;
 use BaconQrCode\Encoder\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +21,11 @@ class Admin extends Controller
     public function dashboard()
     {
         $data['function_key'] = __FUNCTION__;
-        $data['orderday'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereDay('created_at', date('d'))->first();
-        $data['ordermouth'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereMonth('created_at', date('m'))->first();
-        $data['orderyear'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereYear('created_at', date('Y'))->first();
+        $data['orderday'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 3)->whereDay('created_at', date('d'))->first();
+        $data['ordermouth'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 3)->whereMonth('created_at', date('m'))->first();
+        $data['orderyear'] = Orders::select(DB::raw("SUM(total)as total"))->where('status', 3)->whereYear('created_at', date('Y'))->first();
         $data['ordertotal'] = Orders::count();
+        $data['rider'] = User::where('is_rider', 1)->get();
 
         $menu = Menu::select('id', 'name')->get();
         $item_menu = array();
@@ -63,14 +66,29 @@ class Admin extends Controller
                 $pay = '';
                 if ($rs->status == 1) {
                     $status = '<button class="btn btn-sm btn-primary">กำลังทำอาหาร</button>';
-                    $pay = '<button data-id="' . $rs->id . '" data-total="' . $rs->total . '" type="button" class="btn btn-sm btn-outline-success modalPay">ชำระเงิน</button>';
                 }
                 if ($rs->status == 2) {
+                    $status = '<button class="btn btn-sm btn-success">กำลังจัดส่ง</button>';
+                }
+                if ($rs->status == 3) {
                     $status = '<button class="btn btn-sm btn-success">ชำระเงินเรียบร้อยแล้ว</button>';
+                }
+
+                if ($rs->table_id) {
+                    if ($rs->status == 1) {
+                        $pay = '<button data-id="' . $rs->id . '" data-total="' . $rs->total . '" type="button" class="btn btn-sm btn-outline-success modalPay">ชำระเงิน</button>';
+                    }
+                    $flag_order = '<button class="btn btn-sm btn-success">สั่งหน้าร้าน</button>';
+                } else {
+                    if ($rs->status == 1) {
+                        $pay = '<button data-id="' . $rs->id . '" data-total="' . $rs->total . '" type="button" class="btn btn-sm btn-outline-warning modalRider">จัดส่ง</button>';
+                    }
+                    $flag_order = '<button class="btn btn-sm btn-warning">สั่งออนไลน์</button>';
                 }
                 $action = '<button data-id="' . $rs->id . '" type="button" class="btn btn-sm btn-outline-primary modalShow m-1">รายละเอียด</button>' . $pay;
                 $info[] = [
-                    'table_id' => $rs->table_id,
+                    'flag_order' => $flag_order,
+                    'table_id' => $rs->table_id ?? $rs->id,
                     'total' => $rs->total,
                     'remark' => $rs->remark,
                     'status' => $status,
@@ -150,7 +168,7 @@ class Admin extends Controller
         $id = $request->input('id');
         if ($id) {
             $order = Orders::find($id);
-            $order->status = 2;
+            $order->status = 3;
             if ($order->save()) {
                 $data = [
                     'status' => true,
@@ -180,5 +198,29 @@ class Admin extends Controller
         $qr = Builder::staticMerchantPresentedQR($config->image_qr)->setAmount($total)->toSvgString();
 
         echo $qr;
+    }
+    public function confirm_rider(Request $request)
+    {
+        $data = [
+            'status' => false,
+            'message' => 'ชำระเงินไม่สำเร็จ',
+        ];
+        $input = $request->input();
+        if ($input['id']) {
+            $order = Orders::find($input['id']);
+            $order->status = 2;
+            if ($order->save()) {
+                $rider_save = new RiderSend();
+                $rider_save->order_id = $input['id'];
+                $rider_save->rider_id = $input['rider_id'];
+                if ($rider_save->save()) {
+                    $data = [
+                        'status' => true,
+                        'message' => 'ชำระเงินเรียบร้อยแล้ว',
+                    ];
+                }
+            }
+        }
+        return response()->json($data);
     }
 }

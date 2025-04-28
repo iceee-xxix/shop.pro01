@@ -24,5 +24,15 @@ class AdminSeeder extends Seeder
                 'role' => 'admin'
             ]
         );
+        User::firstOrCreate(
+            ['email' => 'users@example.com'], // เงื่อนไขตรวจซ้ำ
+            [
+                'name' => 'ลูกค้า',
+                'email_verified_at' => now(),
+                'password' => Hash::make('123456789'),
+                'remember_token' => null,
+                'role' => 'user'
+            ]
+        );
     }
 }

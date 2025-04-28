@@ -89,6 +89,7 @@
                     </div>
                 </div>
             </div>
+            @if(Session::get('user')->is_rider == 0)
             <div class="col-lg-12 col-md-12 order-3">
                 <div class="card">
                     <div class="card-header">
@@ -99,7 +100,8 @@
                         <table id="myTable" class="display table-responsive">
                             <thead>
                                 <tr>
-                                    <th class="text-center">เลขโต้ะ</th>
+                                    <th class="text-center">สั่งหน้าร้าน/สั่งออนไลน์</th>
+                                    <th class="text-center">เลขโต้ะ/เลขออเดอร์</th>
                                     <th class="text-center">ยอดราคา</th>
                                     <th class="text-left">หมายเหตุ</th>
                                     <th class="text-left">วันที่สั่ง</th>
@@ -113,6 +115,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
@@ -160,6 +163,36 @@
         </div>
     </div>
 </div>
+<div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" id="modal-rider">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">เลือกไรเดอร์ที่ต้องการจัดส่ง</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-12">
+                            <label for="name" class="form-label">ไรเดอร์ : </label>
+                            <select class="form-control" name="rider_id" id="rider_id">
+                                <option value="" disabled selected>กรุณาเลือกไรเดอร์</option>
+                                @foreach($rider as $rs)
+                                <option value="{{$rs->id}}">{{$rs->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="order_id_rider">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirm_rider">ยืนยันการจัดส่ง</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -185,24 +218,29 @@
             },
 
             columns: [{
-                    data: 'table_id',
-                    class: 'text-center',
-                    width: '10%'
-                },
-                {
-                    data: 'total',
+                    data: 'flag_order',
                     class: 'text-center',
                     width: '15%'
                 },
                 {
+                    data: 'table_id',
+                    class: 'text-center',
+                    width: '15%'
+                },
+                {
+                    data: 'total',
+                    class: 'text-center',
+                    width: '10%'
+                },
+                {
                     data: 'remark',
                     class: 'text-left',
-                    width: '20%'
+                    width: '15%'
                 },
                 {
                     data: 'created',
                     class: 'text-center',
-                    width: '20%'
+                    width: '15%'
                 },
                 {
                     data: 'status',
@@ -212,7 +250,7 @@
                 {
                     data: 'action',
                     class: 'text-center',
-                    width: '20%',
+                    width: '15%',
                     orderable: false
                 },
             ]
@@ -241,7 +279,7 @@
 
     $(document).on('click', '.modalPay', function(e) {
         var total = $(this).data('total');
-        var idate = $(this).data('id');
+        var id = $(this).data('id');
         Swal.showLoading();
         $.ajax({
             type: "post",
@@ -260,6 +298,14 @@
                 $('#order_id').val(id);
             }
         });
+    });
+    $(document).on('click', '.modalRider', function(e) {
+        var total = $(this).data('total');
+        var id = $(this).data('id');
+        Swal.showLoading();
+        $('#order_id_rider').val(id);
+        $('#modal-rider').modal('show');
+        Swal.close();
     });
 </script>
 <script>
@@ -337,6 +383,32 @@
             },
             success: function(response) {
                 $('#modal-pay').modal('hide')
+                if (response.status == true) {
+                    Swal.fire(response.message, "", "success");
+                    $('#myTable').DataTable().ajax.reload(null, false);
+                } else {
+                    Swal.fire(response.message, "", "error");
+                }
+            }
+        });
+    });
+
+    $('#confirm_rider').click(function(e) {
+        e.preventDefault();
+        var id = $('#order_id_rider').val();
+        var rider_id = $('#rider_id').val();
+        $.ajax({
+            url: "{{route('confirm_rider')}}",
+            type: "post",
+            data: {
+                id: id,
+                rider_id: rider_id
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#modal-rider').modal('hide')
                 if (response.status == true) {
                     Swal.fire(response.message, "", "success");
                     $('#myTable').DataTable().ajax.reload(null, false);

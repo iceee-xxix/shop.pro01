@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\Category;
 use App\Http\Controllers\admin\Menu;
 use App\Http\Controllers\admin\Promotion;
 use App\Http\Controllers\admin\Table;
+use App\Http\Controllers\admin\Rider;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Delivery;
 use App\Http\Controllers\Main;
@@ -51,6 +52,8 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/delivery/editaddress/{id}', [Delivery::class, 'editaddress'])->name('delivery.editaddress');
     Route::post('/delivery/addressSave', [Delivery::class, 'addressSave'])->name('delivery.addressSave');
     Route::post('/delivery/change', [Delivery::class, 'change'])->name('delivery.change');
+    Route::get('/delivery/listorder', [Delivery::class, 'listorder'])->name('delivery.listorder');
+    Route::post('/delivery/listOrderDetail', [Delivery::class, 'listOrderDetail'])->name('delivery.listOrderDetail');
 });
 //admin
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -74,6 +77,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/admin/order/listOrderDetail', [Admin::class, 'listOrderDetail'])->name('listOrderDetail');
     Route::post('/admin/order/generateQr', [Admin::class, 'generateQr'])->name('generateQr');
     Route::post('/admin/order/confirm_pay', [Admin::class, 'confirm_pay'])->name('confirm_pay');
+    Route::post('/admin/order/confirm_rider', [Admin::class, 'confirm_rider'])->name('confirm_rider');
     //ตั้งค่าเว็บไซต์
     Route::get('/admin/config', [Admin::class, 'config'])->name('config');
     Route::post('/admin/config/save', [Admin::class, 'ConfigSave'])->name('ConfigSave');
@@ -100,6 +104,17 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/category/edit/{id}', [Category::class, 'CategoryEdit'])->name('CategoryEdit');
     Route::post('/admin/category/delete', [Category::class, 'CategoryDelete'])->name('CategoryDelete');
     Route::post('/admin/category/save', [Category::class, 'CategorySave'])->name('CategorySave');
+    //ไรเดอร์
+    Route::get('/admin/rider', [Rider::class, 'rider'])->name('rider');
+    Route::post('/admin/rider/listData', [Rider::class, 'riderlistData'])->name('riderlistData');
+    Route::get('/admin/rider/create', [Rider::class, 'riderCreate'])->name('riderCreate');
+    Route::get('/admin/rider/edit/{id}', [Rider::class, 'riderEdit'])->name('riderEdit');
+    Route::post('/admin/rider/delete', [Rider::class, 'riderDelete'])->name('riderDelete');
+    Route::post('/admin/rider/save', [Rider::class, 'riderSave'])->name('riderSave');
+    Route::post('/admin/order/Riderconfirm_pay', [Rider::class, 'Riderconfirm_pay'])->name('Riderconfirm_pay');
+    //จัดการโต้ะและเพิ่ม Qr code
+    Route::get('/admin/OrderRider', [Rider::class, 'OrderRider'])->name('OrderRider');
+    Route::post('/admin/OrderRider/listData', [Rider::class, 'OrderRiderlistData'])->name('OrderRiderlistData');
 
     //เมนูอาหาร
     Route::get('/admin/menu', [Menu::class, 'menu'])->name('menu');
