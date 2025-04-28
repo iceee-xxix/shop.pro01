@@ -241,6 +241,7 @@
 
     $(document).on('click', '.modalPay', function(e) {
         var total = $(this).data('total');
+        var idate = $(this).data('id');
         Swal.showLoading();
         $.ajax({
             type: "post",
@@ -256,7 +257,7 @@
                 $('#modal-pay').modal('show');
                 $('#totalPay').html(total + ' บาท');
                 $('#qr_code').html(response);
-                $('#order_id').val($(this).data('id'));
+                $('#order_id').val(id);
             }
         });
     });

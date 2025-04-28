@@ -26,7 +26,12 @@ class AuthController extends Controller
 
         if ($user && Hash::check($request->password, $user->password)) {
             Session::put('user', $user); // เก็บ user ไว้ใน session
-            return redirect('/admin');
+
+            if ($user->role === 'admin') {
+                return redirect('/admin');
+            } else {
+                return redirect('/delivery');
+            }
         }
 
         return back()->withErrors(['email' => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง']);

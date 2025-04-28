@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\Menu;
 use App\Http\Controllers\admin\Promotion;
 use App\Http\Controllers\admin\Table;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Delivery;
 use App\Http\Controllers\Main;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+//สั่งจากที่ร้าน
 Route::get('/', [Main::class, 'index'])->name('index');
 Route::get('/order', [Main::class, 'order'])->name('order');
 Route::post('/sendEmp', [Main::class, 'sendEmp'])->name('sendEmp');
@@ -35,7 +36,23 @@ Route::get('/buy', function () {
 Route::get('/total', function () {
     return view('index');
 });
+//สั่ง delivery
+Route::get('/delivery', [Delivery::class, 'index'])->name('index');
+Route::get('/delivery/login', [Delivery::class, 'login'])->name('delivery.login');
+Route::get('/delivery/detail/{id}', [Delivery::class, 'detail'])->name('delivery.detail');
+Route::get('/delivery/order', [Delivery::class, 'order'])->name('delivery.order');
+Route::post('/delivery/sendEmp', [Delivery::class, 'sendEmp'])->name('delivery.sendEmp');
+Route::post('/delivery/sendorder', [Delivery::class, 'SendOrder'])->name('delivery.SendOrder');
 
+Route::middleware(['role:user'])->group(function () {
+    Route::get('/delivery/users', [Delivery::class, 'users'])->name('delivery.users');
+    Route::post('/delivery/usersSave', [Delivery::class, 'usersSave'])->name('delivery.usersSave');
+    Route::get('/delivery/createaddress', [Delivery::class, 'createaddress'])->name('delivery.createaddress');
+    Route::get('/delivery/editaddress/{id}', [Delivery::class, 'editaddress'])->name('delivery.editaddress');
+    Route::post('/delivery/addressSave', [Delivery::class, 'addressSave'])->name('delivery.addressSave');
+    Route::post('/delivery/change', [Delivery::class, 'change'])->name('delivery.change');
+});
+//admin
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/admin/auth', [AuthController::class, 'login']);
 Route::get('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout');
@@ -50,7 +67,7 @@ Route::middleware('checkLogin')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('checkLogin')->group(function () {
+Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin', [Admin::class, 'dashboard'])->name('dashboard');
     //datatable Order
     Route::post('/admin/order/listData', [Admin::class, 'ListOrder'])->name('ListOrder');

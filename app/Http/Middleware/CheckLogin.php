@@ -14,10 +14,11 @@ class CheckLogin
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
-        if (!Session::has('user')) {
-            return redirect('/admin/login');
+        if (!Session::has('user') || Session::get('user')->role !== $role) {
+            abort(403, 'Unauthorized');
+            // return redirect('/admin/login');
         }
 
         return $next($request);
