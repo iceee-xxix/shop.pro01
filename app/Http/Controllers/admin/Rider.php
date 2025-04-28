@@ -139,7 +139,7 @@ class Rider extends Controller
                 $info[] = [
                     'name' => $rs->name,
                     'tel' => $rs->tel,
-                    'location' => "<a href='https://www.google.com/maps?q=" . $rs->lat . "," . $rs->long . "' target='_blank'>เปิด</a>",
+                    'location' => "<a class='btn btn-sm btn-outline-primary m-1' href='https://www.google.com/maps?q=" . $rs->lat . "," . $rs->long . "' target='_blank'>เปิดแผนที่</a>",
                     'detail' => $rs->detail,
                     'action' => $action
                 ];
