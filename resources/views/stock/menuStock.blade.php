@@ -8,23 +8,16 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row d-flex justify-content-between">
-                            <div class="col-6">
-                                {{$info->name}}
-                            </div>
-                            <div class="col-auto">
-                                <a href="{{route('menulistOptionCreate',$id)}}" class="btn btn-sm btn-outline-success d-flex align-items-center" style="font-size:14px">เพิ่มราคาอาหาร&nbsp;<i class="bx bxs-plus-circle"></i></a>
-                            </div>
-                        </div>
+                    <div class="card-header d-flex justify-content-end">
+                        <a href="{{route('menustockCreate',$id)}}" class="btn btn-sm btn-outline-success" style="font-size:14px">เพิ่มสต็อก&nbsp;<i class="bx bxs-plus-circle"></i></a>
                     </div>
                     <div class="card-body">
                         <table id="myTable" class="display" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>ประเภทราคา</th>
-                                    <th class="text-center">ราคา</th>
-                                    <th class="text-center">กำหนดสต็อก</th>
+                                    <th>ชื่อสต็อก</th>
+                                    <th class="text-center">หน่วย</th>
+                                    <th class="text-center">จำนวนที่ใช้ต่อรายการ</th>
                                     <th class="text-center">จัดการ</th>
                                 </tr>
                             </thead>
@@ -50,11 +43,11 @@
             },
             processing: true,
             ajax: {
-                url: "{{route('menulistOption')}}",
+                url: "{{route('menustocklistData')}}",
+                type: "post",
                 data: {
                     id: '{{$id}}'
                 },
-                type: "post",
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
@@ -65,14 +58,16 @@
                     width: '40%'
                 },
                 {
-                    data: 'price',
+                    data: 'unit',
                     class: 'text-center',
                     width: '20%',
+                    orderable: false
                 },
                 {
-                    data: 'stock',
+                    data: 'amount',
                     class: 'text-center',
                     width: '20%',
+                    orderable: false
                 },
                 {
                     data: 'action',
@@ -81,6 +76,38 @@
                     orderable: false
                 },
             ]
+        });
+    });
+    $(document).on('click', '.deletemenuStock', function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        Swal.fire({
+            title: "ท่านต้องการลบรายการนี้ใช่หรือไม่?",
+            icon: "question",
+            showDenyButton: true,
+            confirmButtonText: "ตกลง",
+            denyButtonText: `ยกเลิก`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{route('menustockDelete')}}",
+                    type: "post",
+                    data: {
+                        id: id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status == true) {
+                            Swal.fire(response.message, "", "success");
+                            $('#myTable').DataTable().ajax.reload(null, false);
+                        } else {
+                            Swal.fire(response.message, "", "error");
+                        }
+                    }
+                });
+            }
         });
     });
 </script>

@@ -24,7 +24,6 @@
                                 <tr>
                                     <th>ประเภทราคา</th>
                                     <th class="text-center">ราคา</th>
-                                    <th class="text-center">กำหนดสต็อก</th>
                                     <th class="text-center">จัดการ</th>
                                 </tr>
                             </thead>
@@ -62,15 +61,10 @@
             columns: [{
                     data: 'name',
                     class: 'text-left',
-                    width: '40%'
+                    width: '60%'
                 },
                 {
                     data: 'price',
-                    class: 'text-center',
-                    width: '20%',
-                },
-                {
-                    data: 'stock',
                     class: 'text-center',
                     width: '20%',
                 },

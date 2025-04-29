@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Events\OrderCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
+use App\Models\LogStock;
 use App\Models\Menu;
+use App\Models\MenuStock;
 use App\Models\Orders;
 use App\Models\OrdersDetails;
 use App\Models\Promotion;
+use App\Models\Stock;
 use App\Models\User;
 use App\Models\UsersAddress;
 use Illuminate\Http\Request;
@@ -87,7 +90,23 @@ class Delivery extends Controller
                             $orderdetail->option_id = $rs['option'];
                             $orderdetail->quantity = $rs['qty'];
                             $orderdetail->price = $rs['price'];
-                            $orderdetail->save();
+                            if ($orderdetail->save()) {
+                                $menuStock = MenuStock::where('menu_option_id', $rs['option'])->get();
+                                foreach ($menuStock as $stock_rs) {
+                                    $stock = Stock::find($stock_rs->stock_id);
+                                    $stock->amount = $stock->amount - ($stock_rs->amount * $rs['qty']);
+                                    if ($stock->save()) {
+                                        $log_stock = new LogStock();
+                                        $log_stock->stock_id = $stock_rs->stock_id;
+                                        $log_stock->order_id = $order->id;
+                                        $log_stock->menu_option_id = $rs['option'];
+                                        $log_stock->old_amount = $stock->amount;
+                                        $log_stock->amount = ($stock_rs->amount * $rs['qty']);
+                                        $log_stock->status = 2;
+                                        $log_stock->save();
+                                    }
+                                }
+                            }
                         }
                     }
                     event(new OrderCreated(['📦 มีออเดอร์ใหม่']));

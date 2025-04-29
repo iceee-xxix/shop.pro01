@@ -65,6 +65,13 @@ $config = Config::first();
                 <div data-i18n="Basic">เมนูอาหาร</div>
             </a>
         </li>
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">สต็อก</span></li>
+        <li class="menu-item {{ ($function_key == 'stock') ? 'active' : '' }}">
+            <a href="{{route('stock')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-component"></i>
+                <div data-i18n="Basic">รายการสต็อก</div>
+            </a>
+        </li>
         @elseif(Session::get('user')->is_rider == 1)
         <li class="menu-item {{ ($function_key == 'OrderRider') ? 'active' : '' }}">
             <a href="{{route('OrderRider')}}" class="menu-link">

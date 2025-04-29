@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\Menu;
 use App\Http\Controllers\admin\Promotion;
 use App\Http\Controllers\admin\Table;
 use App\Http\Controllers\admin\Rider;
+use App\Http\Controllers\admin\Stock;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Delivery;
 use App\Http\Controllers\Main;
@@ -130,6 +131,21 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/admin/menu/menuOptionSave', [Menu::class, 'menuOptionSave'])->name('menuOptionSave');
     Route::post('/admin/menu/menuOptionUpdate', [Menu::class, 'menuOptionUpdate'])->name('menuOptionUpdate');
     Route::get('/admin/menu/menuOptionEdit/{id}', [Menu::class, 'menuOptionEdit'])->name('menuOptionEdit');
+    //สต็อกสินค้า
+    Route::get('/admin/stock', [Stock::class, 'stock'])->name('stock');
+    Route::post('/admin/stock/stocklistData', [Stock::class, 'stocklistData'])->name('stocklistData');
+    Route::get('/admin/stock/create', [Stock::class, 'stockCreate'])->name('stockCreate');
+    Route::post('/admin/stock/save', [Stock::class, 'stockSave'])->name('stockSave');
+    Route::get('/admin/stock/edit/{id}', [Stock::class, 'stockEdit'])->name('stockEdit');
+    Route::post('/admin/stock/delete', [Stock::class, 'stockDelete'])->name('stockDelete');
+    //ผูกสต็อก
+    Route::get('/admin/stock/menuOptionStock/{id}', [Stock::class, 'menuOptionStock'])->name('menuOptionStock');
+    Route::post('/admin/stock/menustocklistData', [Stock::class, 'menustocklistData'])->name('menustocklistData');
+    Route::get('/admin/stock/menustockCreate/{id}', [Stock::class, 'menustockCreate'])->name('menustockCreate');
+    Route::get('/admin/stock/menuStockedit/{id}', [Stock::class, 'menuStockedit'])->name('menuStockedit');
+    Route::post('/admin/stock/menustockSave', [Stock::class, 'menustockSave'])->name('menustockSave');
+    Route::post('/admin/stock/menustockDelete', [Stock::class, 'menustockDelete'])->name('menustockDelete');
+    Route::get('/admin/stock/stockDetail/{id}', [Stock::class, 'stockDetail'])->name('stockDetail');
 });
 
 

@@ -33,14 +33,14 @@ class Admin extends Controller
         if (count($menu) > 0) {
             foreach ($menu as $rs) {
                 $item_menu[] = $rs->name;
-                $menu_order = OrdersDetails::Join('orders', 'orders.id', '=', 'orders_details.order_id')->where('orders.status', 2)->where('menu_id', $rs->id)->groupBy('menu_id')->count();
+                $menu_order = OrdersDetails::Join('orders', 'orders.id', '=', 'orders_details.order_id')->where('orders.status', 3)->where('menu_id', $rs->id)->groupBy('menu_id')->count();
                 $item_order[] = $menu_order;
             }
         }
 
         $item_mouth = array();
         for ($i = 1; $i < 13; $i++) {
-            $query = Orders::select(DB::raw("SUM(total)as total"))->where('status', 2)->whereMonth('created_at', date($i))->first();
+            $query = Orders::select(DB::raw("SUM(total)as total"))->where('status', 3)->whereMonth('created_at', date($i))->first();
             $item_mouth[] = $query->total;
         }
         $data['item_menu'] = $item_menu;
@@ -203,7 +203,7 @@ class Admin extends Controller
     {
         $data = [
             'status' => false,
-            'message' => 'ชำระเงินไม่สำเร็จ',
+            'message' => 'ส่งข้อมูลไปยังไรเดอร์ไม่สำเร็จ',
         ];
         $input = $request->input();
         if ($input['id']) {
@@ -216,7 +216,7 @@ class Admin extends Controller
                 if ($rider_save->save()) {
                     $data = [
                         'status' => true,
-                        'message' => 'ชำระเงินเรียบร้อยแล้ว',
+                        'message' => 'ส่งข้อมูลไปยังไรเดอร์เรียบร้อยแล้ว',
                     ];
                 }
             }
