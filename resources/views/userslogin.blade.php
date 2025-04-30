@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-auth.css')}}" />
     <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('assets/js/config.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <?php
 
@@ -38,6 +39,22 @@ $config = Config::first();
 ?>
 
 <body>
+    @if ($message = Session::get('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{ $message }}',
+        })
+    </script>
+    @endif
+    @if($message = Session::get('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: '{{ $message }}',
+        })
+    </script>
+    @endif
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
@@ -75,8 +92,13 @@ $config = Config::first();
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                            <div class="mb-3 row">
+                                <div class="col-6 d-flex justify-content-end">
+                                    <a href="{{route('delivery.register')}}" class="btn btn-primary" type="button">สมัครสมาชิก</a>
+                                </div>
+                                <div class="col-6 d-flex justify-content-start">
+                                    <button class="btn btn-primary" type="submit">เข้าสู่ระบบ</button>
+                                </div>
                             </div>
                         </form>
                     </div>

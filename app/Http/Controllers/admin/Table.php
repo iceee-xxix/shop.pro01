@@ -65,14 +65,14 @@ class Table extends Controller
         if (!isset($input['id'])) {
             $table = new ModelsTable();
             $table->table_number = $input['table_number'];
-            $table->qr_code = QrCode::size(200)->generate(url('?table=' . $input['table_number']));
+            $table->qr_code = QrCode::size(300)->generate(url('?table=' . $input['table_number']));
             if ($table->save()) {
                 return redirect()->route('table')->with('success', 'บันทึกรายการเรียบร้อยแล้ว');
             }
         } else {
             $table = ModelsTable::find($input['id']);
             $table->table_number = $input['table_number'];
-            $table->qr_code = QrCode::size(200)->generate(url('?table=' . $input['table_number']));
+            $table->qr_code = QrCode::size(300)->generate(url('?table=' . $input['table_number']));
             if ($table->save()) {
                 return redirect()->route('table')->with('success', 'บันทึกรายการเรียบร้อยแล้ว');
             }

@@ -15,6 +15,7 @@ use App\Models\Stock;
 use App\Models\User;
 use App\Models\UsersAddress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class Delivery extends Controller
@@ -32,7 +33,7 @@ class Delivery extends Controller
 
     public function login()
     {
-        return view('login');
+        return view('userslogin');
     }
 
     public function detail($id)
@@ -244,5 +245,25 @@ class Delivery extends Controller
             }
         }
         echo $info;
+    }
+
+    public function register()
+    {
+        return view('usersRegister');
+    }
+
+    public function UsersRegister(Request $request)
+    {
+        $input = $request->input();
+        $users = new User;
+        $users->name = $input['name'];
+        $users->tel = $input['tel'];
+        $users->email = $input['email'];
+        $users->password = Hash::make($input['password']);
+        $users->email_verified_at = now();
+        if ($users->save()) {
+            return redirect()->route('delivery.login')->with('success', 'สมัครสมาชิกเรียบร้อยแล้ว');
+        }
+        return redirect()->route('delivery.register')->with('error', 'สมัครสมาชิกไม่สำเร็จ');
     }
 }

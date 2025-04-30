@@ -13,7 +13,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Login Shop</title>
+    <title>Register Shop</title>
     <meta name="description" content="" />
     <link rel="icon" type="image/x-icon" href="{{asset('assets/img/favicon/favicon.ico')}}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-auth.css')}}" />
     <script src="{{asset('assets/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('assets/js/config.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <?php
 
@@ -38,6 +39,22 @@ $config = Config::first();
 ?>
 
 <body>
+    @if ($message = Session::get('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{ $message }}',
+        })
+    </script>
+    @endif
+    @if($message = Session::get('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: '{{ $message }}',
+        })
+    </script>
+    @endif
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner">
@@ -48,21 +65,23 @@ $config = Config::first();
                                 <span class="app-brand-text demo text-body fw-bolder">{{ $config->name ?? 'shop' }}</span>
                             </a>
                         </div>
-                        <form action="{{url('/admin/auth')}}" method="post">
+                        <form action="{{route('delivery.UsersRegister')}}" method="post">
                             @csrf
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="email"
-                                    name="email"
-                                    placeholder="Email"
-                                    autofocus />
+                                <label for="name" class="form-label">ชื่อ</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="ชื่อ" autofocus required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="tel" class="form-label">เบอร์โทรศัพท์ติดต่อ</label>
+                                <input type="text" class="form-control" id="tel" name="tel" placeholder="เบอร์โทรศัพท์ติดต่อ" autofocus required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">อีเมล</label>
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Email" autofocus required />
                             </div>
                             <div class="mb-3 form-password-toggle">
                                 <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password</label>
+                                    <label class="form-label" for="password">รหัสผ่าน</label>
                                 </div>
                                 <div class="input-group input-group-merge">
                                     <input
@@ -71,12 +90,12 @@ $config = Config::first();
                                         class="form-control"
                                         name="password"
                                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                        aria-describedby="password" />
+                                        aria-describedby="password" required />
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                            <div class="mb-3 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-primary" type="submit">สมัครสมาชิก</button>
                             </div>
                         </form>
                     </div>

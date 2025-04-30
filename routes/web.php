@@ -41,6 +41,8 @@ Route::get('/total', function () {
 //สั่ง delivery
 Route::get('/delivery', [Delivery::class, 'index'])->name('index');
 Route::get('/delivery/login', [Delivery::class, 'login'])->name('delivery.login');
+Route::get('/delivery/register', [Delivery::class, 'register'])->name('delivery.register');
+Route::post('/delivery/UsersRegister', [Delivery::class, 'UsersRegister'])->name('delivery.UsersRegister');
 Route::get('/delivery/detail/{id}', [Delivery::class, 'detail'])->name('delivery.detail');
 Route::get('/delivery/order', [Delivery::class, 'order'])->name('delivery.order');
 Route::post('/delivery/sendEmp', [Delivery::class, 'sendEmp'])->name('delivery.sendEmp');
