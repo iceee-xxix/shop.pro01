@@ -145,13 +145,19 @@ class Admin extends Controller
         $config->color2 = $input['color2'];
         $config->color_font = $input['color_font'];
         $config->color_category = $input['color_category'];
-        $config->image_qr = $input['image_qr'];
+        $config->promptpay = $input['promptpay'];
 
         if ($request->hasFile('image_bg')) {
             $file = $request->file('image_bg');
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('image', $filename, 'public');
             $config->image_bg = $path;
+        }
+        if ($request->hasFile('image_qr')) {
+            $file = $request->file('image_qr');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('image', $filename, 'public');
+            $config->image_qr = $path;
         }
         if ($config->save()) {
             return redirect()->route('config')->with('success', 'บันทึกรายการเรียบร้อยแล้ว');
@@ -194,10 +200,22 @@ class Admin extends Controller
     public function generateQr(Request $request)
     {
         $config = Config::first();
-        $total = $request->total;
-        $qr = Builder::staticMerchantPresentedQR($config->image_qr)->setAmount($total)->toSvgString();
-
-        echo $qr;
+        if ($config->promptpay != '') {
+            $total = $request->total;
+            $qr = Builder::staticMerchantPresentedQR($config->promptpay)->setAmount($total)->toSvgString();
+            echo '<div class="row g-3 mb-3">
+                <div class="col-md-12">
+                    ' . $qr . '
+                </div>
+            </div>';
+        } elseif ($config->image_qr != '') {
+            echo '
+        <div class="row g-3 mb-3">
+            <div class="col-md-12">
+            <img width="100%" src="' . url('storage/' . $config->image_qr) . '">
+            </div>
+        </div>';
+        }
     }
     public function confirm_rider(Request $request)
     {
