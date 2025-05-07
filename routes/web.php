@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\admin\Admin;
 use App\Http\Controllers\admin\Category;
+use App\Http\Controllers\admin\CategoryExpenses;
+use App\Http\Controllers\admin\Expenses;
 use App\Http\Controllers\admin\Menu;
 use App\Http\Controllers\admin\Promotion;
 use App\Http\Controllers\admin\Table;
@@ -148,6 +150,20 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/admin/stock/menustockSave', [Stock::class, 'menustockSave'])->name('menustockSave');
     Route::post('/admin/stock/menustockDelete', [Stock::class, 'menustockDelete'])->name('menustockDelete');
     Route::get('/admin/stock/stockDetail/{id}', [Stock::class, 'stockDetail'])->name('stockDetail');
+    //หมวดหมู่รายจ่าย
+    Route::get('/admin/category_expenses', [CategoryExpenses::class, 'category_expenses'])->name('category_expenses');
+    Route::post('/admin/category_expenses/categoryexpenseslistData', [CategoryExpenses::class, 'categoryexpenseslistData'])->name('categoryexpenseslistData');
+    Route::get('/admin/category_expenses/create', [CategoryExpenses::class, 'CategoryExpensesCreate'])->name('CategoryExpensesCreate');
+    Route::get('/admin/category_expenses/edit/{id}', [CategoryExpenses::class, 'CategoryExpensesEdit'])->name('CategoryExpensesEdit');
+    Route::post('/admin/category_expenses/delete', [CategoryExpenses::class, 'CategoryExpensesDelete'])->name('CategoryExpensesDelete');
+    Route::post('/admin/category_expenses/save', [CategoryExpenses::class, 'CategoryExpensesSave'])->name('CategoryExpensesSave');
+    //รายจ่าย
+    Route::get('/admin/expenses', [Expenses::class, 'expenses'])->name('expenses');
+    Route::post('/admin/expenses/expenseslistData', [Expenses::class, 'expenseslistData'])->name('expenseslistData');
+    Route::get('/admin/expenses/create', [Expenses::class, 'ExpensesCreate'])->name('ExpensesCreate');
+    Route::get('/admin/expenses/edit/{id}', [Expenses::class, 'ExpensesEdit'])->name('ExpensesEdit');
+    Route::post('/admin/expenses/save', [Expenses::class, 'ExpensesSave'])->name('ExpensesSave');
+    Route::post('/admin/expenses/delete', [Expenses::class, 'ExpensesDelete'])->name('ExpensesDelete');
 });
 
 

@@ -72,6 +72,19 @@ $config = Config::first();
                 <div data-i18n="Basic">รายการสต็อก</div>
             </a>
         </li>
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">รายจ่าย</span></li>
+        <li class="menu-item {{ ($function_key == 'category_expenses') ? 'active' : '' }}">
+            <a href="{{route('category_expenses')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">หมวดหมู่</div>
+            </a>
+        </li>
+        <li class="menu-item {{ ($function_key == 'expenses') ? 'active' : '' }}">
+            <a href="{{route('expenses')}}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-dollar-circle"></i>
+                <div data-i18n="Basic">รายจ่ายทั้งหมด</div>
+            </a>
+        </li>
         @elseif(Session::get('user')->is_rider == 1)
         <li class="menu-item {{ ($function_key == 'OrderRider') ? 'active' : '' }}">
             <a href="{{route('OrderRider')}}" class="menu-link">
