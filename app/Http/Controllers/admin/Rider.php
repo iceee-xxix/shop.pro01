@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Orders;
+use App\Models\Pay;
+use App\Models\PayGroup;
 use App\Models\RiderSend;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -164,6 +166,26 @@ class Rider extends Controller
             $order = Orders::find($id);
             $order->status = 3;
             if ($order->save()) {
+                $pay = new Pay();
+                $pay->payment_number = $this->generateRunningNumber();
+                $pay->total = $order->total;
+                if ($pay->save()) {
+                    $order = Orders::where('id', $id)->get();
+                    foreach ($order as $rs) {
+                        $rs->status = 3;
+                        if ($rs->save()) {
+                            $paygroup = new PayGroup();
+                            $paygroup->pay_id = $pay->id;
+                            $paygroup->order_id = $rs->id;
+                            $paygroup->save();
+                        }
+                    }
+                    $data = [
+                        'status' => true,
+                        'message' => 'ชำระเงินเรียบร้อยแล้ว',
+                    ];
+                }
+
                 $rider = RiderSend::where('order_id', $id)->first();
                 $rider->status = 1;
                 if ($rider->save()) {
@@ -175,5 +197,19 @@ class Rider extends Controller
             }
         }
         return response()->json($data);
+    }
+
+    function generateRunningNumber($prefix = '', $padLength = 7)
+    {
+        $latest = Pay::orderBy('id', 'desc')->first();
+
+        if ($latest && isset($latest->payment_number)) {
+            $number = (int) ltrim($latest->payment_number, '0');
+            $next = $number + 1;
+        } else {
+            $next = 1;
+        }
+
+        return $prefix . str_pad($next, $padLength, '0', STR_PAD_LEFT);
     }
 }

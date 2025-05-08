@@ -78,11 +78,20 @@ Route::middleware('checkLogin')->group(function () {
 Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin', [Admin::class, 'dashboard'])->name('dashboard');
     //datatable Order
+    Route::get('/admin/order', [Admin::class, 'order'])->name('adminorder');
     Route::post('/admin/order/listData', [Admin::class, 'ListOrder'])->name('ListOrder');
+    Route::post('/admin/order/ListOrderPay', [Admin::class, 'ListOrderPay'])->name('ListOrderPay');
+    Route::post('/admin/order/ListOrderPayRider', [Admin::class, 'ListOrderPayRider'])->name('ListOrderPayRider');
     Route::post('/admin/order/listOrderDetail', [Admin::class, 'listOrderDetail'])->name('listOrderDetail');
+    Route::post('/admin/order/listOrderDetailRider', [Admin::class, 'listOrderDetailRider'])->name('listOrderDetailRider');
+    Route::post('/admin/order/listOrderDetailPay', [Admin::class, 'listOrderDetailPay'])->name('listOrderDetailPay');
     Route::post('/admin/order/generateQr', [Admin::class, 'generateQr'])->name('generateQr');
     Route::post('/admin/order/confirm_pay', [Admin::class, 'confirm_pay'])->name('confirm_pay');
     Route::post('/admin/order/confirm_rider', [Admin::class, 'confirm_rider'])->name('confirm_rider');
+    Route::get('/admin/order/printReceipt/{id}', [Admin::class, 'printReceipt'])->name('printReceipt');
+    Route::get('/admin/order/printReceiptfull/{id}', [Admin::class, 'printReceiptfull'])->name('printReceiptfull');
+    Route::get('/admin/order_rider', [Admin::class, 'order_rider'])->name('order_rider');
+    Route::post('/admin/order/ListOrderRider', [Admin::class, 'ListOrderRider'])->name('ListOrderRider');
     //ตั้งค่าเว็บไซต์
     Route::get('/admin/config', [Admin::class, 'config'])->name('config');
     Route::post('/admin/config/save', [Admin::class, 'ConfigSave'])->name('ConfigSave');
