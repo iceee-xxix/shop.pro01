@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('color_category')->nullable();
             $table->text('image_bg')->nullable();
             $table->text('image_qr')->nullable();
+            $table->text('promptpay')->nullable();
             $table->timestamps();
         });
     }

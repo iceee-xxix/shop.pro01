@@ -24,9 +24,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
     <script>
+        const PUSHER_APP_KEY = "{{ env('PUSHER_APP_KEY') }}";
+        const PUSHER_APP_CLUSTER = "{{ env('PUSHER_APP_CLUSTER') }}";
+        
         Pusher.logToConsole = true;
-        var pusher = new Pusher('01b0d285b6ff16be7e6a', {
-            cluster: 'ap1',
+        var pusher = new Pusher(PUSHER_APP_KEY, {
+            cluster: PUSHER_APP_CLUSTER,
             encrypted: true
         });
         var channel = pusher.subscribe('orders');
