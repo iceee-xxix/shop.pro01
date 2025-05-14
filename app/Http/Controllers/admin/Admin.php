@@ -124,9 +124,10 @@ class Admin extends Controller
                 ->where('order_id', $rs->id)
                 ->groupBy('menu_id')
                 ->get();
+            $order_id = $rs->id;
             if (count($orderdetails) > 0) {
                 foreach ($orderdetails as $key => $value) {
-                    $order = OrdersDetails::where('order_id', $rs->id)
+                    $order = OrdersDetails::where('order_id', $order_id)
                         ->where('menu_id', $value->menu_id)
                         ->with('menu', 'option')
                         ->get();
