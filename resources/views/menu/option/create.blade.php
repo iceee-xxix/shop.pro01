@@ -25,7 +25,7 @@
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-12">
                                             <label for="price" class="form-label">ราคา(บาท) : </label>
-                                            <input type="text" class="form-control" id="price" name="price" required>
+                                            <input type="text" class="form-control" id="price" name="price" required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                         </div>
                                     </div>
                                 </div>

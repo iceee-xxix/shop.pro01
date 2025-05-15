@@ -25,7 +25,7 @@
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-12">
                                             <label for="amount" class="form-label">จำนวน : </label>
-                                            <input type="text" class="form-control" id="amount" name="amount" required>
+                                            <input type="text" class="form-control" id="amount" name="amount" required onkeypress="return event.charCode >= 8 && event.charCode <= 57">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">

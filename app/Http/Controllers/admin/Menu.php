@@ -152,7 +152,8 @@ class Menu extends Controller
             $info = [];
             foreach ($menuOption as $rs) {
                 $stock = '<a href="' . route('menuOptionStock', $rs->id) . '" class="btn btn-sm btn-outline-primary"><i class="bx bx-list-ol"></i></a>';
-                $action = '<a href="' . route('menuOptionEdit', $rs->id) . '" class="btn btn-sm btn-outline-primary" title="แก้ไข"><i class="bx bx-edit-alt"></i></a>';
+                $action = '<a href="' . route('menuOptionEdit', $rs->id) . '" class="btn btn-sm btn-outline-primary" title="แก้ไข"><i class="bx bx-edit-alt"></i></a>
+                <button type="button" data-id="' . $rs->id . '" class="btn btn-sm btn-outline-danger deleteMenu" title="ลบ"><i class="bx bxs-trash"></i></button>';
                 $info[] = [
                     'name' => $rs->type,
                     'price' => $rs->price . ' บาท',
@@ -207,5 +208,26 @@ class Menu extends Controller
             return redirect()->route('menuOption', $menu->menu_id)->with('success', 'บันทึกรายการเรียบร้อยแล้ว');
         }
         return redirect()->route('menu')->with('error', 'ไม่สามารถบันทึกข้อมูลได้');
+    }
+
+
+    public function menuOptionDelete(Request $request)
+    {
+        $data = [
+            'status' => false,
+            'message' => 'ลบข้อมูลไม่สำเร็จ',
+        ];
+        $id = $request->input('id');
+        if ($id) {
+            $delete = menuOption::find($id);
+            if ($delete->delete()) {
+                $data = [
+                    'status' => true,
+                    'message' => 'ลบข้อมูลเรียบร้อยแล้ว',
+                ];
+            }
+        }
+
+        return response()->json($data);
     }
 }

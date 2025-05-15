@@ -92,6 +92,12 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/order/printReceiptfull/{id}', [Admin::class, 'printReceiptfull'])->name('printReceiptfull');
     Route::get('/admin/order_rider', [Admin::class, 'order_rider'])->name('order_rider');
     Route::post('/admin/order/ListOrderRider', [Admin::class, 'ListOrderRider'])->name('ListOrderRider');
+    //Cancel
+    Route::post('/admin/order/cancelOrder', [Admin::class, 'cancelOrder'])->name('cancelOrder');
+    Route::post('/admin/order/cancelMenu', [Admin::class, 'cancelMenu'])->name('cancelMenu');
+    //update-status
+    Route::post('/admin/order/updatestatus', [Admin::class, 'updatestatus'])->name('updatestatus');
+    Route::post('/admin/order/updatestatusOrder', [Admin::class, 'updatestatusOrder'])->name('updatestatusOrder');
     //ตั้งค่าเว็บไซต์
     Route::get('/admin/config', [Admin::class, 'config'])->name('config');
     Route::post('/admin/config/save', [Admin::class, 'ConfigSave'])->name('ConfigSave');
@@ -144,6 +150,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/admin/menu/menuOptionSave', [Menu::class, 'menuOptionSave'])->name('menuOptionSave');
     Route::post('/admin/menu/menuOptionUpdate', [Menu::class, 'menuOptionUpdate'])->name('menuOptionUpdate');
     Route::get('/admin/menu/menuOptionEdit/{id}', [Menu::class, 'menuOptionEdit'])->name('menuOptionEdit');
+    Route::post('/admin/menu/menuOptionEdit/delete', [Menu::class, 'menuOptionDelete'])->name('menuOptionDelete');
     //สต็อกสินค้า
     Route::get('/admin/stock', [Stock::class, 'stock'])->name('stock');
     Route::post('/admin/stock/stocklistData', [Stock::class, 'stocklistData'])->name('stocklistData');

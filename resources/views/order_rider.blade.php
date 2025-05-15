@@ -445,5 +445,73 @@
         var address = $('#address').val();
         window.open('<?= url('admin/order/printReceiptfull') ?>/' + pay_id + '?name=' + name + '&tel=' + tel + '&tax_id=' + tax_id + '&address=' + address, '_blank');
     });
+
+    $(document).on('click', '.cancelOrderSwal', function(e) {
+        var id = $(this).data('id');
+        $('#modal-detail').modal('hide');
+        Swal.fire({
+            title: "ต้องการยกเลิกออเดอร์นี้ใช่หรือไม่",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน",
+            denyButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.showLoading();
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('cancelOrder') }}",
+                    data: {
+                        id: id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.close();
+                        if (response.status == true) {
+                            $('#myTable').DataTable().ajax.reload(null, false);
+                            Swal.fire(response.message, "", "success");
+                        } else {
+                            Swal.fire(response.message, "", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on('click', '.cancelMenuSwal', function(e) {
+        var id = $(this).data('id');
+        $('#modal-detail').modal('hide');
+        Swal.fire({
+            title: "ต้องการยกเลิกเมนูนี้ใช่หรือไม่",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน",
+            denyButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.showLoading();
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('cancelMenu') }}",
+                    data: {
+                        id: id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        Swal.close();
+                        if (response.status == true) {
+                            $('#myTable').DataTable().ajax.reload(null, false);
+                            Swal.fire(response.message, "", "success");
+                        } else {
+                            Swal.fire(response.message, "", "error");
+                        }
+                    }
+                });
+            }
+        });
+    });
 </script>
 @endsection
