@@ -374,23 +374,29 @@ class Admin extends Controller
     {
         $paygroup = PayGroup::where('pay_id', $request->input('id'))->get();
         $info = '';
-        foreach ($paygroup as $rs) {
-            $orderdetails = OrdersDetails::select('menu_id')
-                ->where('order_id', $rs->order_id)
-                ->groupBy('menu_id')
-                ->get();
-            if (count($orderdetails) > 0) {
-                foreach ($orderdetails as $key => $value) {
-                    $order = OrdersDetails::where('order_id', $rs->order_id)
-                        ->where('menu_id', $value->menu_id)
-                        ->with('menu', 'option')
-                        ->get();
-                    $info .= '<div class="card text-white bg-primary mb-3"><div class="card-body"><h5 class="card-title text-white">' . $order[0]['menu']->name . '</h5><p class="card-text">';
-                    foreach ($order as $rs) {
-                        $info .= '' . $rs['menu']->name . ' (' . $rs['option']->type . ') จำนวน ' . $rs->quantity . ' ราคา ' . ($rs->quantity * $rs->price) . ' บาท <br>';
+        foreach ($paygroup as $pg) {
+            $orderDetailsGrouped = OrdersDetails::where('order_id', $pg->order_id)
+                ->with('menu', 'option')
+                ->get()
+                ->groupBy('menu_id');
+            if ($orderDetailsGrouped->isNotEmpty()) {
+                $info .= '<div class="mb-3">';
+                $info .= '<div class="row"><div class="col d-flex align-items-end"><h5 class="text-primary mb-2">เลขออเดอร์ #: ' . $pg->order_id . '</h5></div></div>';
+                foreach ($orderDetailsGrouped as $details) {
+                    $menuName = optional($details->first()->menu)->name ?? 'ไม่พบชื่อเมนู';
+                    $info .= '<ul class="list-group mb-1 shadow-sm rounded">';
+                    foreach ($details as $detail) {
+                        $option = $detail->option;
+                        $optionType = $option ? $menuName . ' ' . $option->type : 'ไม่มีตัวเลือก';
+                        $priceTotal = number_format($detail->quantity * $detail->price, 2);
+                        $info .= '<li class="list-group-item d-flex bd-highlight align-items-center">';
+                        $info .= '<div class="flex-grow-1 bd-highlight"><small class="text-muted">' . htmlspecialchars($optionType) . '</small> — <span class="fw-medium">จำนวน ' . $detail->quantity . '</span></div>';
+                        $info .= '<button class="btn btn-sm btn-primary bd-highlight">' . $priceTotal . ' บาท</button>';
+                        $info .= '</li>';
                     }
-                    $info .= '</p></div></div>';
+                    $info .= '</ul>';
                 }
+                $info .= '</div>';
             }
         }
         echo $info;
