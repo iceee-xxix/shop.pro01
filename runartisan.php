@@ -1,5 +1,5 @@
 <?php
-$basePath = realpath($_SERVER['DOCUMENT_ROOT']);
+$basePath = realpath(__DIR__);
 chdir($basePath);
 echo shell_exec('/opt/plesk/php/8.2/bin/php artisan key:generate');
 echo shell_exec('/opt/plesk/php/8.2/bin/php artisan storage:link');
