@@ -94,6 +94,7 @@ $config = Config::first();
                 <div class="card-title text-start">
                     {{$rs->name}}
                 </div>
+                <p class="text-muted" style="text-align: left; line-height: 1;font-size: 10pt;">{{$rs->detail}}</p>
 
                 @foreach($rs['option'] as $options)
                 <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
